@@ -19,7 +19,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.unina.tata.testsuitetranslator.translatorTCnew;
+import com.unina.tata.testsuitetranslatornew.translatorTCnew;
 
 public class FileManagerTC {
 	private static File dir;
@@ -43,7 +43,7 @@ public class FileManagerTC {
 		ExportDocumentIntoList(args[1]);
 	
 		outputname=args[2];
-		flag=Boolean.parseBoolean(args[3]);
+		//flag=Boolean.parseBoolean(args[3]);
 		
 		writeHeadTSFile();
 		translatorTCnew.createJunitTestSuite();		

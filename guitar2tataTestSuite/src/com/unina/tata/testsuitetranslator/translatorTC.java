@@ -1,4 +1,4 @@
-package testsuitetranslatornew;
+package com.unina.tata.testsuitetranslator;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 
 import com.unina.tata.filemanagerTC.FileManagerTC;
 
-public class translatorTCnew {
+public class translatorTC {
 	public static Document tataGuiTreeDocument;	
 	public static ArrayList<Document> GuitarTestCaseDocument;
 	public static String JunitTestSuite;
