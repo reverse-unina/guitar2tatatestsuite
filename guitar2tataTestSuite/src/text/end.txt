@@ -1,0 +1,174 @@
+
+	//Helper methods for doing the actual work with instrumentation
+
+	public void afterRestart() {
+		solo.sleep(SLEEP_AFTER_RESTART);
+		Log.d("nofatclips", "Ready to operate after restarting...");
+	}
+	
+	public void retrieveWidgets () {
+		clearWidgetList();
+		for (View w: solo.getCurrentViews()) {
+			if (!theViews.containsKey(w.getId())) {
+				allViews.add(w);
+			}
+			if (w.getId()>0) {
+				theViews.put(w.getId(), w); // Add only if the widget has a valid ID
+			}
+			if (w instanceof TabHost) {
+				setTabs((TabHost)w);
+			}
+		}
+	}
+	
+	public void setTabs (TabHost t) {
+		this.tabs = t;
+		this.tabNum = t.getTabWidget().getTabCount();
+	}
+	
+	public Map<Integer,View> getWidgets () {
+		return this.theViews;
+	}
+	
+	public View getWidget (int key) {
+		return getWidgets().get(key);
+	}
+	
+	public ArrayList<View> getAllWidgets () {
+		return this.allViews;
+	}
+	
+	public void clearWidgetList() {
+		theViews.clear();
+		allViews.clear();
+	}
+	
+	public void doTestWidget (int theId, String theType, String theName) {
+		if (theId == -1) return;
+		View v = getWidget(theId);
+		assertNotNull("Checking for id", v);
+		
+		String type = v.getClass().getName();
+		// type = type.substring(0, type.indexOf('@'));
+		assertEquals("Checking for type", theType, type);
+		
+		if (theName != "") {
+			MoreAsserts.assertAssignableFrom(TextView.class, v);
+			TextView widget = (TextView) v;
+			String name = widget.getText().toString();
+			assertEquals("Checking for name", theName, name);
+		}
+	}
+	
+	public void fireEvent (int widgetId, String widgetType, String eventType) {
+		fireEvent(widgetId, widgetType, eventType, null);
+	}
+	
+	public void fireEvent (String widgetName, String widgetType, String eventType) {
+		fireEvent(widgetName, widgetType, eventType, null);
+	}
+	
+	public void fireEvent (int widgetId, String widgetType, String eventType, String value) {
+		View v = getWidget(widgetId);
+		if (v == null) {
+			v = theActivity.findViewById(widgetId);
+		}
+		fireEventOnView (v, eventType, value);
+	}
+	
+	public void fireEvent (String widgetName, String widgetType, String eventType, String value) {
+		View v = null;
+		if (eventType.equals("back") || eventType.equals("scrollDown")) {
+			fireEventOnView(null, eventType, null);
+		}
+		if (widgetType.endsWith("Button")) {
+			v = solo.getButton(widgetName);
+		}
+		if (v == null) {
+			for (View w: getAllWidgets()) {
+				if (w instanceof Button) {
+					Button candidate = (Button) w;
+					if (candidate.getText().equals(widgetName)) {
+						v = candidate;
+					}
+				}
+				if (v!=null) break;
+			}
+		}
+		fireEventOnView (v, eventType, value);
+	}
+	
+	private void fireEventOnView (View v, String eventType, String value) {
+		if (eventType.equals("click")) {
+			TouchUtils.clickView(this, v);
+		} else if (eventType.equals("back")) {
+			solo.goBack();
+		} else if (eventType.equals("scrollDown")) {
+			solo.scrollDown();
+		} else if (eventType.equals("swapTab") && value!=null) {
+			if (v instanceof TabHost) {
+				swapTab ((TabHost)v, value);
+			} else {
+				swapTab (this.tabs, value);
+			}
+		} else {
+			return;
+		}
+		refreshCurrentActivity();
+		solo.sleep(SLEEP_AFTER_EVENT);
+	}
+	
+	public void setInput (int widgetId, String widgetType, String value) {
+		View v = getWidget(widgetId);
+		if (v == null) {
+			v = theActivity.findViewById(widgetId);
+		}
+		if (widgetType == "editText") {
+			solo.enterText((EditText)v, value);
+		} else if (widgetType == "click") {
+			TouchUtils.clickView(this, v);
+		}
+	}
+	
+	private void swapTab (TabHost t, String tab) {
+		swapTab (t, Integer.valueOf(tab));
+	}
+	
+	private void swapTab (final TabHost t, int num) {
+		final int n = Math.min(this.tabNum, Math.max(1,num))-1;
+		Log.i("nofatclips", "Swapping to tab " + num);
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				t.setCurrentTab(n);
+			}
+		});
+		this.getInstrumentation().waitForIdleSync();
+	}
+	
+	public void restart() {
+		if (FORCE_RESTART) {
+			ContextWrapper main = new ContextWrapper(solo.getCurrentActivity());
+			Intent i = main.getBaseContext().getPackageManager().getLaunchIntentForPackage(main.getBaseContext().getPackageName() );
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+			main.startActivity(i);
+		}
+	}
+	
+	private void refreshCurrentActivity() {
+		this.theActivity = solo.getCurrentActivity();
+		Log.i("nofatclips", "Current activity is " + getActivity().getLocalClassName());
+	}
+	
+	public void debug (String msg) {
+		Log.d("nofatclips",msg);
+		for (View x: getWidgets().values()) {
+			if (x instanceof TextView) {
+				Log.i("nofatclips", ((TextView)x).getText().toString() + "[" + x.toString() + "]: " + x.getId());
+			} else {
+				Log.i("nofatclips", "[" + x.toString() + "]: " + x.getId());
+			}
+		}
+	}
+
+}
+

@@ -1,0 +1,79 @@
+//package your.package.here;
+
+/*	Add package and import declarations. Try CTRL+SHIFT+O if you're using Eclipse.
+//	Robotium must be in the build path!!! Otherwise, Solo cannot be resolved to a class.
+//	Additionally, the targetPackage for Instrumentation in AndroidManifest.xml should
+//	be set to the package of the application under test (that is PACKAGE_NAME below) */
+
+import android.app.Activity;
+import android.content.ContextWrapper;
+import android.content.Intent;
+
+import com.jayway.android.robotium.solo.Solo;
+import android.test.MoreAsserts;
+import android.test.TouchUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TabHost;
+import android.util.Log;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import android.test.ActivityInstrumentationTestCase2;
+
+@SuppressWarnings("rawtypes")
+public class MileageGuiTest extends ActivityInstrumentationTestCase2 {
+	
+	// Attributes
+	private Activity theActivity;
+	private Map<Integer,View> theViews;
+	private ArrayList<View> allViews = new ArrayList<View>(); // A list of all widgets
+	private Solo solo;
+	private TabHost	tabs;
+	private int tabNum;
+	
+
+	public final static String PACKAGE_NAME = "package_name_here";
+	public final static String CLASS_NAME = "start_activity_name";
+	public final static int SLEEP_AFTER_EVENT = 2000;
+	public final static int SLEEP_AFTER_RESTART = 2000;
+	public final static boolean FORCE_RESTART = false;
+
+	private static Class<?> theClass;
+	static {
+		try {
+			theClass = Class.forName(CLASS_NAME);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public MileageGuiTest () {
+		super(PACKAGE_NAME,theClass);
+		this.theViews = new HashMap<Integer,View>();
+	}
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		this.solo = new Solo (getInstrumentation(), getActivity());
+		restart();
+		afterRestart();
+		refreshCurrentActivity();
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		try {
+			solo.finalize();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		theActivity.finish();
+		super.tearDown();
+	}
+
+	// Test Cases
