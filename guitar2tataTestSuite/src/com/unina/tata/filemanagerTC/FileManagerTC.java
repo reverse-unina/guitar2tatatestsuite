@@ -36,12 +36,14 @@ public class FileManagerTC {
 	 */
 	public static void main(String[] args) throws XPathExpressionException, ParserConfigurationException, IOException, TransformerException, SAXException {
 		// TODO Auto-generated method stub
+		//Input 1 il guitree ottenuto dal crawler
 		translatorTCnew.tataGuiTreeDocument=ExportFileIntoDocument(args[0]);
-				
-		translatorTCnew.GuitarTestCaseDocument= new ArrayList<Document>();
+		translatorTCnew.GuitarTestCases= new ArrayList<String>();
 		
+		translatorTCnew.GuitarTestCaseDocument= new ArrayList<Document>();
+		//Input 2 testsuite di guitar
 		ExportDocumentIntoList(args[1]);
-	
+		//output il nome della testsuite Junit ottenuta
 		outputname=args[2];
 		//flag=Boolean.parseBoolean(args[3]);
 		
@@ -58,6 +60,7 @@ public class FileManagerTC {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(file);
+			
 			return doc;		
 
 		}
@@ -77,7 +80,7 @@ public class FileManagerTC {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(file);
-			
+			translatorTCnew.GuitarTestCases.add(file.getName());
 			translatorTCnew.GuitarTestCaseDocument.add(doc);
 		}
 		//System.out.println(directory.listFiles());

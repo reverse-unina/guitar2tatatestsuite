@@ -10,21 +10,22 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 
 import com.jayway.android.robotium.solo.Solo;
-import android.test.MoreAsserts;
-import android.test.TouchUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TabHost;
+import android.webkit.WebView;
+import android.widget.*;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import android.test.ActivityInstrumentationTestCase2;
 
+import static android.content.Context.WINDOW_SERVICE;
+import static android.view.Surface.*;
+
 @SuppressWarnings("rawtypes")
-public class MileageGuiTest extends ActivityInstrumentationTestCase2 {
+public class AndroidGuiTest extends ActivityInstrumentationTestCase2 {
 	
 	// Attributes
 	private Activity theActivity;
@@ -33,14 +34,53 @@ public class MileageGuiTest extends ActivityInstrumentationTestCase2 {
 	private Solo solo;
 	private TabHost	tabs;
 	private int tabNum;
-	
 
-	public final static String PACKAGE_NAME = "package_name_here";
-	public final static String CLASS_NAME = "start_activity_name";
-	public final static int SLEEP_AFTER_EVENT = 2000;
-	public final static int SLEEP_AFTER_RESTART = 2000;
+	public final static String PACKAGE_NAME = "aarddict.android";
+	public final static String CLASS_NAME = "aarddict.android.LookupActivity";
+	public final static int SLEEP_AFTER_EVENT = 6000;
+	public final static int SLEEP_AFTER_RESTART = 6000;
+	public final static int SLEEP_ON_THROBBER = 30000;
 	public final static boolean FORCE_RESTART = false;
 
+	public final static boolean IN_AND_OUT_FOCUS= false;
+
+	public final static String CLICK = "click";
+	public final static String BACK = "back";
+	public final static String SCROLL_DOWN = "scrollDown";
+	public final static String SWAP_TAB = "swapTab";
+	public final static String TYPE_TEXT = "editText";
+	public final static String LIST_SELECT = "selectListItem";
+	public final static String LONG_CLICK = "longClick";
+	public final static String LIST_LONG_SELECT = "longClickListItem";
+	public final static String OPEN_MENU = "openMenu";
+	public final static String SET_BAR = "setBar";
+	public final static String SPINNER_SELECT = "selectSpinnerItem";
+	public final static String CHANGE_ORIENTATION = "changeOrientation";
+	public final static String CLICK_ON_TEXT = "clickText";
+	public final static String BUTTON = "button";
+	public final static String EDIT_TEXT = "editText";
+	public final static String RADIO = "radio";
+	public final static String CHECKBOX = "check";
+	public final static String TOGGLE_BUTTON = "toggle";
+	public final static String TAB_HOST = "tabHost";
+	public final static String NULL = "null";
+	public final static String LIST_VIEW = "listView";
+	public final static String SPINNER = "spinner";
+	public final static String TEXT_VIEW = "text";
+	public final static String MENU_VIEW = "menu";
+	public final static String IMAGE_VIEW = "image";
+	public final static String DIALOG_VIEW = "dialog";
+	public final static String SEEK_BAR = "seekBar";
+	public final static String RATING_BAR = "ratingBar";
+	public final static String LINEAR_LAYOUT = "linearLayout";
+	public final static String WEB_VIEW = "webPage";
+	public final static String DATE_PICKER = "datePicker";
+	public final static String TIME_PICKER = "timePicker";
+	public final static String LIST_ITEM = "listItem";
+	public final static String SPINNER_INPUT = "spinnerInput";
+	public final static String MENU_ITEM = "menuItem";
+	public final static String EMPTY_LIST = "emptyList";
+	
 	private static Class<?> theClass;
 	static {
 		try {
@@ -51,7 +91,7 @@ public class MileageGuiTest extends ActivityInstrumentationTestCase2 {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MileageGuiTest () {
+	public AndroidGuiTest () {
 		super(PACKAGE_NAME,theClass);
 		this.theViews = new HashMap<Integer,View>();
 	}
