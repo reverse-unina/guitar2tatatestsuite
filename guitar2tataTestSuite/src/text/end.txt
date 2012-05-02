@@ -1,5 +1,6 @@
 //Helper methods for doing the actual work with instrumentation
-	public void afterRestart() {
+	
+public void afterRestart() {
 		solo.setActivityOrientation(Solo.PORTRAIT);
 		solo.sleep(SLEEP_AFTER_RESTART);
 		waitOnThrobber();
@@ -475,4 +476,5 @@
 				Log.i("nofatclips", "[" + x.toString() + "]: " + x.getId());
 			}
 		}
+	}
 	}
