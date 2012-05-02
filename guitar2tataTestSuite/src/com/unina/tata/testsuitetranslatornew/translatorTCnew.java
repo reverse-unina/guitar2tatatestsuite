@@ -77,8 +77,9 @@ public class translatorTCnew {
 				
 				JunitTestSuite="\t\tfireEvent ("+((Element) widgetEventNode).getAttribute("id")+" ,"
 						+ index +	", \""
-						+((Element) widgetEventNode).getAttribute("type")+"\", \""
+						
 						+((Element) widgetEventNode).getAttribute("name")+"\", \""
+						+((Element) widgetEventNode).getAttribute("type")+"\", \""
 						+((Element) eventNodes.item(0)).getAttribute("type")+"\", "
 						+ value
 						+");\n";
@@ -138,8 +139,9 @@ public class translatorTCnew {
 			
 			JunitTestSuite="\t\tfireEvent ("+((Element) widgetEventNode).getAttribute("id")+" ,"
 					+ index +	", \""
-					+((Element) widgetEventNode).getAttribute("type")+"\", \""
+					
 					+((Element) widgetEventNode).getAttribute("name")+"\", \""
+					+((Element) widgetEventNode).getAttribute("type")+"\", \""
 					+((Element) eventNodes.item(0)).getAttribute("type")+"\", "
 					+ value
 					+");\n";
