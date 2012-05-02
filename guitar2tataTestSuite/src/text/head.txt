@@ -35,11 +35,11 @@ public class AndroidGuiTest extends ActivityInstrumentationTestCase2 {
 	private TabHost	tabs;
 	private int tabNum;
 
-	public final static String PACKAGE_NAME = "aarddict.android";
-	public final static String CLASS_NAME = "aarddict.android.LookupActivity";
-	public final static int SLEEP_AFTER_EVENT = 6000;
-	public final static int SLEEP_AFTER_RESTART = 6000;
-	public final static int SLEEP_ON_THROBBER = 30000;
+	public final static String PACKAGE_NAME = "";
+	public final static String CLASS_NAME = "";
+	public final static int SLEEP_AFTER_EVENT = ;
+	public final static int SLEEP_AFTER_RESTART = ;
+	public final static int SLEEP_ON_THROBBER = ;
 	public final static boolean FORCE_RESTART = false;
 
 	public final static boolean IN_AND_OUT_FOCUS= false;

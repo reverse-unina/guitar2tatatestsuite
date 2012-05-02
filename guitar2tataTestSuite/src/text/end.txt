@@ -1,12 +1,11 @@
 //Helper methods for doing the actual work with instrumentation
-
 	public void afterRestart() {
 		solo.setActivityOrientation(Solo.PORTRAIT);
 		solo.sleep(SLEEP_AFTER_RESTART);
 		waitOnThrobber();
 		Log.d("nofatclips", "Ready to operate after restarting...");
 	}
-	/*
+/*
 	public void waitOnThrobber() {
 		boolean flag;
 		do {
@@ -21,7 +20,7 @@
 			}
 		} while (flag);
 	}
-	*/
+*/
 	public void waitOnThrobber() {
 		int sleepTime = SLEEP_ON_THROBBER;
 		if (sleepTime==0) return;
@@ -49,7 +48,7 @@
 		for (View w: viewList) {
 			String text = (w instanceof TextView)?": "+((TextView)w).getText().toString():"";
 			Log.d("nofatclips", "Found widget: id=" + w.getId() + " ("+ w.toString() + ")" + text); // + " in window at [" + xy[0] + "," + xy[1] + "] on screen at [" + xy2[0] + "," + xy2[1] +"]");
-			
+
 			//
 			allViews.add(w);
 			//
@@ -65,9 +64,9 @@
 	
 	public void setTabs (TabHost t) {
 		this.tabs = t;
-		this.tabNum = t.getTabWidget().getTabCount();
+		this.tabNum = t.getTabWidget().getTabCount();		
 	}
-	
+
 	public Map<Integer,View> getWidgets () {
 		return this.theViews;
 	}
@@ -103,8 +102,7 @@
 		String testeeSimpleType = getSimpleType(testee);
 		String testeeType = testee.getClass().getName();
 		Log.i("nofatclips", "Testing for type (" + testeeType + ") against the original (" + theType + ")");
-		String testeeText = (testee instanceof TextView)?(((TextView)testee).getText().toString()):"";
-		String testeeName = (testee instanceof EditText)?(((EditText)testee).getHint().toString()):testeeText;
+		String testeeName = (testee instanceof TextView)?((TextView) testee).getText().toString():"";
 		Log.i("nofatclips", "Testing for name (" + testeeName + ") against the original (" + theName + ")");
 		if ( ((theType.equals(testeeType)) || (theType.equals(testeeSimpleType)) ) && (theName.equals(testeeName)) ) {
 			return true;
@@ -112,7 +110,7 @@
 		return false;
 	}
 	
-	
+
 	public ArrayList<View> getWidgetsById (int id) {
 		ArrayList<View> theList = new ArrayList<View>();
 		for (View theView: getAllWidgets()) {
@@ -141,14 +139,14 @@
 	
 	public void clearWidgetList() {
 		theViews.clear();
-		allViews.clear();
+		allViews.clear();		
 	}
 	
 	public void doTestWidget (int theId, String theType, String theName) {
 		if (theId == -1) return;
 		assertNotNull("Testing for id #" + theId + " (" + theType + "): " + theName, getWidget(theId, theType, theName));
 	}
-	
+
 	public void doTestWidget (String theType, String theName) {
 		assertNotNull("Testing for type " + theType + "): " + theName, getWidget(theType, theName));
 	}
@@ -167,7 +165,7 @@
 	}
 	
 	public void fireEvent (int widgetId, int widgetIndex, String widgetName, String widgetType, String eventType, String value) {
-		
+	
 		View v = null;
 		if (widgetIndex<getAllWidgets().size()) {
 			v = getAllWidgets().get(widgetIndex); // Search widget by index
@@ -223,7 +221,7 @@
 		if (v == null) {
 			v = theActivity.findViewById(widgetId);
 		}
-		injectInteraction(v, inputType, value);
+		injectInteraction(v, inputType, value);	
 	}
 	
 	private void injectInteraction (View v, String interactionType, String value) {
@@ -231,7 +229,7 @@
 			requestView(v);
 		}
 		if (interactionType.equals(CLICK)) {
-			click (v);
+			click (v);			
 		} else if (interactionType.equals(LONG_CLICK)) {
 			longClick(v);
 		} else if (interactionType.equals(BACK)) {
@@ -253,16 +251,16 @@
 		} else if (interactionType.equals(LIST_LONG_SELECT)) {
 			selectListItem((ListView)v, value, true);
 		} else if (interactionType.equals(SPINNER_SELECT)) {
-			selectSpinnerItem((Spinner)v, value);
+			selectSpinnerItem((Spinner)v, value);			
 		} else if (interactionType.equals(TYPE_TEXT)) {
 			solo.enterText((EditText)v, value);
 		} else if (interactionType.equals(SET_BAR)) {
 			solo.setProgressBar((ProgressBar)v, Integer.parseInt(value));
 		} else {
 			return;
-		}
+		}		
 	}
-	
+
 	public void changeOrientation() {
 		Display display = ((WindowManager) getInstrumentation().getContext().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		int angle = display.getRotation();
@@ -288,11 +286,11 @@
 	private void selectListItem (ListView l, String item) {
 		selectListItem (l, Integer.valueOf(item), false);
 	}
-	
+
 	private void selectListItem (ListView l, String item, boolean longClick) {
 		selectListItem (l, Integer.valueOf(item), longClick);
 	}
-	
+
 	private void selectListItem (final ListView l, int num, boolean longClick) {
 		final int n = Math.min(l.getCount(), Math.max(1,num))-1;
 		requestFocus(l);
@@ -318,30 +316,30 @@
 			click (l.getSelectedView());
 		}
 	}
-	
+			
 	public static boolean isInAndOutFocusEnabled () {
 		return (IN_AND_OUT_FOCUS);
-	}
+	}			
 	
 	protected void requestFocus (final View v) {
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				v.requestFocus();
+				v.requestFocus();		
 			}
 		});
 		sync();
 	}
 	
-	// Scroll until the view is on the screen if IN_AND_OUT_OF_FOCUS is enabled or if the force parameter is true
+	// Scroll until the view is on the screen if IN_AND_OUT_OF_FOCUS is enabled or if the force parameter is true 
 	protected void requestView (final View v, boolean force) {
 		if (force || isInAndOutFocusEnabled()) {
 			home();
-			solo.sendKey(Solo.UP); // Solo.waitForView() requires a widget to be focused
+			solo.sendKey(Solo.UP); // Solo.waitForView() requires a widget to be focused		
 			solo.waitForView(v, 1000, true);
 		}
 		requestFocus(v);
-	}
-	
+	}		
+
 	protected void requestView (final View v) {
 		requestView(v, false);
 	}
@@ -350,20 +348,20 @@
 	private void selectSpinnerItem (Spinner l, String item) {
 		selectSpinnerItem (l, Integer.valueOf(item));
 	}
-	
+
 	private void selectSpinnerItem (final Spinner s, int num) {
 		assertNotNull(s, "Cannon press spinner item: the spinner does not exist");
 		Log.i("nofatclips", "Clicking the spinner view");
 		click(s);
 		sync();
 		selectListItem(solo.getCurrentListViews().get(0), num, false);
-	}
+	}	
 	
 	protected void click (View v) {
 		// TouchUtils.clickView(this, v);
 		solo.clickOnView(v);
 	}
-	
+
 	protected void longClick (View v) {
 		solo.clickLongOnView(v);
 	}
@@ -392,7 +390,7 @@
 		sync();
 	}
 	
-	
+
 	public void restart() {
 		if (FORCE_RESTART) {
 			ContextWrapper main = new ContextWrapper(solo.getCurrentActivity());
@@ -401,65 +399,65 @@
 			main.startActivity(i);
 		}
 	}
-	
+
 	private void refreshCurrentActivity() {
 		this.theActivity = solo.getCurrentActivity();
 		Log.i("nofatclips", "Current activity is " + getActivity().getLocalClassName());
 	}
 	
 	public String getSimpleType(View v) {
-		String type = v.getClass().getName();
+		String type = v.getClass().getName(); 
 		if (type.endsWith("null"))
-		return NULL;
+			return NULL;
 		if (type.endsWith("RadioButton"))
-		return RADIO;
+			return RADIO;
 		if (type.endsWith("CheckBox") || type.endsWith("CheckedTextView"))
-		return CHECKBOX;
+			return CHECKBOX;
 		if (type.endsWith("ToggleButton"))
-		return TOGGLE_BUTTON;
+			return TOGGLE_BUTTON;
 		if (type.endsWith("IconMenuView"))
-		return MENU_VIEW;
+			return MENU_VIEW;
 		if (type.endsWith("DatePicker"))
-		return DATE_PICKER;
+			return DATE_PICKER;
 		if (type.endsWith("TimePicker"))
-		return TIME_PICKER;
+			return TIME_PICKER;
 		if (type.endsWith("IconMenuItemView"))
-		return MENU_ITEM;
+			return MENU_ITEM;
 		if (type.endsWith("DialogTitle"))
-		return DIALOG_VIEW;
+			return DIALOG_VIEW;
 		if (type.endsWith("Button"))
-		return BUTTON;
+			return BUTTON;
 		if (type.endsWith("EditText"))
-		return EDIT_TEXT;
+			return EDIT_TEXT;
 		if (type.endsWith("Spinner"))
-		return SPINNER;
+			return SPINNER;
 		if (type.endsWith("SeekBar"))
-		return SEEK_BAR;
+			return SEEK_BAR;
 		if (v instanceof RatingBar && (!((RatingBar)v).isIndicator()))
-		return RATING_BAR;
+			return RATING_BAR;
 		if (type.endsWith("TabHost"))
-		return TAB_HOST;
+			return TAB_HOST;
 		if (type.endsWith("ListView") || type.endsWith("ExpandedMenuView")) {
 			ListView l = (ListView)v;
 			return (l.getCount()>0)?LIST_VIEW:EMPTY_LIST;
 		}
 		if (type.endsWith("TextView"))
-		return TEXT_VIEW;
+			return TEXT_VIEW;
 		if (type.endsWith("ImageView"))
-		return IMAGE_VIEW;
+			return IMAGE_VIEW;
 		if (type.endsWith("LinearLayout"))
-		return LINEAR_LAYOUT;
+			return LINEAR_LAYOUT;
 		if ((v instanceof WebView) || type.endsWith("WebView"))
-		return WEB_VIEW;
+			return WEB_VIEW;
 		if (type.endsWith("TwoLineListItem"))
-		return LIST_ITEM;
+			return LIST_ITEM;
 		return "";
 	}
 	
 	protected void assertNotNull (final View v) {
 		ActivityInstrumentationTestCase2.assertNotNull(v);
 	}
-	
+
 	protected void assertNotNull (final View v, String errorMessage) {
 		ActivityInstrumentationTestCase2.assertNotNull(errorMessage, v);
 	}
@@ -478,6 +476,3 @@
 			}
 		}
 	}
-
-}
-
